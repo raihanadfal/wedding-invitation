@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Build & Deployment
+*.bat
+deploy.sh
+DEPLOY_INFO.txt
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,3 +27,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local

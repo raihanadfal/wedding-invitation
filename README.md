@@ -1,26 +1,16 @@
-# Undangan Tessa & Kevin
+# React + Vite
 
-## Jalankan
-```bash
-npm install
-npm run dev
-```
-Buka http://localhost:3000
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-## Nama tamu dinamis
-Tambahkan parameter `?to=` di URL, contoh:
-```
-http://localhost:3000/?to=Budi%20%26%20Keluarga
-```
-Nama otomatis muncul di bagian "Kepada Yth." dan terisi di form RSVP.
-Logic ada di `app/page.tsx` (`searchParams.to`).
+Currently, two official plugins are available:
 
-## Yang perlu diganti
-- Nama pasangan & tanggal di `app/page.tsx` (COUPLE, WEDDING_DATE)
-- Kotak gradient di `HeroGrid.tsx` & `LoveStorySticky.tsx` → ganti jadi `<img>` foto asli
-- Isi cerita di STORY_STAGES, jadwal acara, lokasi
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## Animasi scroll (seperti referensi)
-- `HeroGrid.tsx`: foto pertama full-screen → mengecil & bergabung jadi grid 5 foto saat discroll → grid memudar → muncul teks "anda diundang ke pernikahan ...". Semua digerakkan oleh scroll (pakai `framer-motion` `useScroll`/`useTransform`), section ini punya tinggi scroll 350vh dengan viewport yang di-`sticky`.
-- `LoveStorySticky.tsx`: tiap stage cerita muncul membesar di tengah, lalu saat discroll mengecil & bergeser ke belakang (opacity & scale turun) sementara stage berikutnya membesar di depan — efek tumpuk seperti di video.
-- Jalankan `npm install` dulu supaya `framer-motion` terpasang.
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the Oxlint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.

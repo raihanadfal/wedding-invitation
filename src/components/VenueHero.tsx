@@ -16,6 +16,20 @@ export default function VenueHero() {
           Venue
         </h2>
 
+        <div className="mb-8 max-w-md">
+          <p className="text-lg sm:text-xl font-semibold mb-4">
+            Rumah Makan Depa 2
+          </p>
+          <p className="text-sm sm:text-base leading-relaxed mb-3">
+            JL. Cikalong, Mandalajaya, Kec. Cikalong,
+            <br />
+            Kabupaten Tasikmalaya, Jawa Barat 46195
+          </p>
+          <p className="text-xs sm:text-sm text-white/80">
+            -7.792046, 108.188630
+          </p>
+        </div>
+
         <a
           href="https://maps.app.goo.gl/uZNcpmKEyBWnUosu5"
           target="_blank"

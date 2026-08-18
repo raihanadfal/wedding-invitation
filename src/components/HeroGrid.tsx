@@ -92,10 +92,10 @@ export default function HeroGrid({
           <p className="text-xs uppercase tracking-[0.35em] text-neutral-600 font-medium mb-4">
             Kepada Yth. {guest}
           </p>
-          <p className="font-serif italic text-4xl sm:text-6xl leading-tight text-neutral-900 mb-3">
+          <p className="font-body text-4xl sm:text-3xl leading-tight text-neutral-900 mb-3 font-light tracking-wide">
             Anda diundang ke pernikahan
           </p>
-          <p className="font-serif italic text-3xl sm:text-5xl text-neutral-900">
+          <p className="font-display italic text-10xl sm:text-5xl text-neutral-900">
             {couple}
           </p>
         </motion.div>

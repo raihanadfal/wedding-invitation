@@ -72,9 +72,6 @@ export default function RSVPList() {
     }
   };
 
-  const hadir = rsvpList.filter((item) => item.kehadiran === "Hadir").length;
-  const totalTamu = rsvpList.reduce((sum, item) => sum + item.jumlahTamu, 0);
-
   return (
     <section className="px-6 py-24 bg-gray-50">
       <Reveal className="max-w-4xl mx-auto">

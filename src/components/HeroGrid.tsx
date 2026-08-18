@@ -1,74 +1,10 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
-
-// Posisi & proporsi persis sesuai foto referensi
-const SIDE_PHOTOS = [
-  {
-    src: "/images/image-1.webp", // 1. Foto Kiri Atas (Selfie Couple)
-    final: { left: "8%", top: "16%", width: "22%", height: "33%" },
-    entrance: { x: -180, y: -40 },
-    rounded: "rounded-[28px]",
-    zIndex: "z-20",
-  },
-  {
-    src: "/images/image-2.webp", // 2. Foto Kiri Bawah (Agak geser ke kanan)
-    final: { left: "14%", top: "51%", width: "16%", height: "19%" },
-    entrance: { x: -140, y: 80 },
-    rounded: "rounded-2xl",
-    zIndex: "z-20",
-  },
-  {
-    src: "/images/image-3.webp", // 3. Foto Kanan Atas (Mulai dari tengah tinggi foto utama)
-    final: { left: "70%", top: "44%", width: "16%", height: "18%" },
-    entrance: { x: 140, y: -40 },
-    rounded: "rounded-2xl",
-    zIndex: "z-20",
-  },
-  {
-    src: "/images/image-4.webp", // 4. Foto Kanan Bawah (Portrait memanjang)
-    final: { left: "70%", top: "64%", width: "20%", height: "30%" },
-    entrance: { x: 180, y: 100 },
-    rounded: "rounded-[28px]",
-    zIndex: "z-20",
-  },
-];
-
-function SidePhoto({
-  photo,
-  start,
-  end,
-  scrollYProgress,
-}: {
-  photo: (typeof SIDE_PHOTOS)[number];
-  start: number;
-  end: number;
-  scrollYProgress: MotionValue<number>;
-}) {
-  const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
-  const scale = useTransform(scrollYProgress, [start, end], [0.8, 1]);
-  const x = useTransform(scrollYProgress, [start, end], [photo.entrance.x, 0]);
-  const y = useTransform(scrollYProgress, [start, end], [photo.entrance.y, 0]);
-
-  return (
-    <motion.div
-      style={{
-        ...photo.final,
-        position: "absolute",
-        opacity,
-        scale,
-        x,
-        y,
-      }}
-      className={`shadow-xl overflow-hidden ${photo.rounded} ${photo.zIndex}`}
-    >
-      <img
-        src={photo.src}
-        alt="wedding detail"
-        className="w-full h-full object-cover"
-      />
-    </motion.div>
-  );
-}
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionTemplate,
+} from "framer-motion";
 
 export default function HeroGrid({
   couple = "T & K",
@@ -78,106 +14,98 @@ export default function HeroGrid({
   guest?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start start", "end end"],
+    offset: ["start start", "end center"],
   });
 
-  // Foto Utama: Fullscreen -> Mengecil di Tengah (Optimized)
-  const mainLeft = useTransform(scrollYProgress, [0, 0.4], ["0%", "32%"]);
-  const mainTop = useTransform(scrollYProgress, [0, 0.4], ["0%", "23%"]);
-  const mainW = useTransform(scrollYProgress, [0, 0.4], ["100%", "36%"]);
-  const mainH = useTransform(scrollYProgress, [0, 0.4], ["100%", "64%"]);
-  const mainRadius = useTransform(scrollYProgress, [0, 0.4], ["0px", "32px"]);
+  // Main image: Fullscreen -> Blur & Scale down
+  const mainScale = useTransform(scrollYProgress, [0, 0.6], [1, 0.7]);
+  const mainBlurValue = useTransform(scrollYProgress, [0, 0.6], [0, 8]);
+  const mainBlur = useMotionTemplate`blur(${mainBlurValue}px)`;
+  const mainOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0.4]);
 
-  // Opacity teks judul & hint - Reduced keyframes
+  // Text opacity
   const titleOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const hintOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
+  const hintOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
 
-  // Efek transisi grid - Simplified
-  const gridOpacity = useTransform(scrollYProgress, [0.6, 0.8], [1, 0]);
-
-  // Teks Undangan - Reduced keyframes
-  const inviteOpacity = useTransform(scrollYProgress, [0.7, 0.9], [0, 1]);
-  const inviteY = useTransform(scrollYProgress, [0.7, 0.9], [40, 0]);
+  // Invitation text entrance
+  const inviteOpacity = useTransform(scrollYProgress, [0.4, 0.7], [0, 1]);
+  const inviteScale = useTransform(scrollYProgress, [0.4, 0.7], [0.8, 1]);
 
   return (
-    <div ref={ref} className="relative" style={{ height: "350vh" }}>
-      <div className="sticky top-0 h-screen overflow-hidden bg-white">
-        {/* --- GRID COLLAGE PHOTOS --- */}
-        <motion.div
-          style={{ opacity: gridOpacity }}
-          className="absolute inset-0 w-full h-full"
-        >
-          {/* FOTO UTAMA (CENTER) */}
-          <motion.div
-            className="absolute overflow-hidden z-10 shadow-lg"
-            style={{
-              left: mainLeft,
-              top: mainTop,
-              width: mainW,
-              height: mainH,
-              borderRadius: mainRadius,
-            }}
-          >
-            <img
-              src="/images/image-5.webp"
-              alt="couple main photo"
-              className="w-full h-full object-cover"
-            />
-            <motion.div
-              style={{ opacity: titleOpacity }}
-              className="absolute inset-0 flex items-center justify-center bg-black/20"
-            >
-              <h1 className="font-serif italic text-white text-6xl sm:text-8xl drop-shadow-md text-center px-4">
-                {couple}
-              </h1>
-            </motion.div>
-          </motion.div>
+    <div ref={ref} className="relative" style={{ height: "250vh" }}>
+      <div className="sticky top-0 h-screen overflow-hidden bg-neutral-900">
+        {/* FIX: backdrop gelap di belakang foto — jadi kalau foto belum
+            selesai load, teks putih tetap kontras (bukan putih-di-atas-putih). */}
+        <div className="absolute inset-0 bg-neutral-900" />
 
-          {/* FOTO-FOTO PENDUKUNG */}
-          {SIDE_PHOTOS.map((p, i) => (
-            <SidePhoto
-              key={i}
-              photo={p}
-              start={0.1 + i * 0.04}
-              end={0.1 + i * 0.04 + 0.18}
-              scrollYProgress={scrollYProgress}
-            />
-          ))}
+        {/* MAIN FULLSCREEN IMAGE - Blur & Scale effect */}
+        <motion.img
+          src="/images/image-5.webp"
+          alt="couple main photo"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            scale: mainScale,
+            opacity: mainOpacity,
+            filter: mainBlur,
+          }}
+          fetchPriority="high"
+          decoding="async"
+        />
+
+        {/* FIX: overlay gradient (gelap di tengah & bawah) menggantikan
+            bg-black/10 yang terlalu tipis — memberi kontras yang cukup
+            untuk teks putih di atas foto seterang apa pun. */}
+        <motion.div
+          style={{ opacity: titleOpacity }}
+          className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/50 z-10"
+        />
+
+        {/* Title overlay on main photo */}
+        <motion.div
+          style={{ opacity: titleOpacity }}
+          className="absolute inset-0 flex items-center justify-center z-20"
+        >
+          <h1 className="font-serif italic text-white text-6xl sm:text-8xl text-center px-4 [text-shadow:0_4px_24px_rgba(0,0,0,0.65)]">
+            {couple}
+          </h1>
         </motion.div>
 
-        {/* --- FLOATING BUTTON POJOK KIRI BAWAH ('N') --- */}
-        <div className="absolute bottom-6 left-6 z-40">
-          <button className="w-9 h-9 rounded-full bg-neutral-900 text-white text-xs font-medium flex items-center justify-center shadow-md hover:scale-105 transition">
-            N
-          </button>
-        </div>
-
-        {/* --- SCROLL HINT --- */}
+        {/* Scroll hint */}
         <motion.p
           style={{ opacity: hintOpacity }}
-          className="absolute bottom-6 inset-x-0 text-center text-[10px] tracking-[0.3em] uppercase text-neutral-400 z-30 pointer-events-none"
+          className="absolute bottom-6 inset-x-0 text-center text-[10px] tracking-[0.3em] uppercase text-white z-30 pointer-events-none [text-shadow:0_1px_8px_rgba(0,0,0,0.6)]"
         >
           scroll to explore
         </motion.p>
 
-        {/* --- INVITATION TEXT SECTION --- */}
+        {/* Invitation text - Appears on scroll */}
         <motion.div
-          style={{ opacity: inviteOpacity, y: inviteY }}
-          className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center z-40"
+          style={{
+            opacity: inviteOpacity,
+            scale: inviteScale,
+          }}
+          className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center z-40 bg-white"
         >
-          <p className="text-xs uppercase tracking-[0.35em] text-neutral-500 font-medium mb-4">
+          <p className="text-xs uppercase tracking-[0.35em] text-neutral-600 font-medium mb-4">
             Kepada Yth. {guest}
           </p>
-          <p className="font-serif italic text-3xl sm:text-5xl leading-relaxed text-neutral-800">
+          <p className="font-serif italic text-4xl sm:text-6xl leading-tight text-neutral-900 mb-3">
             Anda diundang ke pernikahan
-            <br />
-            <span className="not-italic font-normal text-neutral-900 block mt-2">
-              {couple}
-            </span>
+          </p>
+          <p className="font-serif italic text-3xl sm:text-5xl text-neutral-900">
+            {couple}
           </p>
         </motion.div>
+
+        {/* Floating button */}
+        <div className="absolute bottom-6 left-6 z-50">
+          <button className="w-9 h-9 rounded-full bg-neutral-900 text-white text-xs font-medium flex items-center justify-center shadow-md hover:scale-105 transition">
+            N
+          </button>
+        </div>
       </div>
     </div>
   );

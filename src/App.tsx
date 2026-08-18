@@ -1,42 +1,43 @@
-import { useState, useEffect } from "react";
-import Countdown from "./components/Countdown";
 import Reveal from "./components/Reveal";
 import HeroGrid from "./components/HeroGrid";
 import LoveStorySticky from "./components/LoveStorySticky";
-import VenueHero from "./components/VenueHero";
+import CountdownVenueSection from "./components/CountdownVenueSection";
+import GalleryParallax from "./components/GalleryParallax";
+import RSVPForm from "./components/RSVPForm";
+import RSVPList from "./components/RSVPList";
 
 const WEDDING_DATE = "2026-08-23T10:00:00";
 const COUPLE = "Raihan & Devi";
 
-const STORY_STAGES = [
+export const STORY_STAGES = [
   {
-    title: "Stage 1 — Kampus",
-    text: "Bertemu pertama kali di kampus, jadi teman satu kelompok tugas dan mulai sering jajan bareng.",
-    gradient: "from-moss/30 to-clay/30",
+    title: "Awal Cerita",
+    text: "Awalnya hanya perkenalan biasa yang berlanjut tanpa banyak rencana.",
+    gradient: "from-amber-100 to-orange-100",
     image: "/images/stages/stage-1.webp",
   },
   {
-    title: "Stage 2 — Jarak Jauh",
-    text: "Sempat LDR-an, tapi makin dekat lewat telepon tiap malam dan rencana liburan.",
-    gradient: "from-clay/30 to-moss/40",
+    title: "Saling Memahami",
+    text: "Proses panjang untuk saling mengenal, menerima perbedaan, dan belajar berjalan beriringan.",
+    gradient: "from-emerald-100 to-teal-100",
     image: "/images/stages/stage-2.webp",
   },
   {
-    title: "Stage 3 — Lamaran",
-    text: "Devi melamar Raihan di pantai tempat mereka pertama liburan bersama.",
-    gradient: "from-ink/20 to-clay/40",
+    title: "Langkah Lanjutan",
+    text: "Setelah melewati berbagai tahapan, kami siap memulai babak baru sebagai pasangan suami istri.",
+    gradient: "from-rose-100 to-pink-100",
+    image: "/images/stages/stage-3.webp",
   },
 ];
 
-function App() {
-  const [guest, setGuest] = useState("Tamu Undangan");
+function getGuestName(): string {
+  if (typeof window === "undefined") return "Tamu Undangan";
+  const params = new URLSearchParams(window.location.search);
+  return params.get("to")?.trim() || "Tamu Undangan";
+}
 
-  useEffect(() => {
-    // Get guest name from URL query parameters
-    const params = new URLSearchParams(window.location.search);
-    const guestName = params.get("to")?.trim() || "Tamu Undangan";
-    setGuest(guestName);
-  }, []);
+function App() {
+  const guest = getGuestName();
 
   return (
     <main>
@@ -90,21 +91,11 @@ function App() {
         </Reveal>
       </section>
 
-      {/* COUNTDOWN */}
-      <section className="px-6 py-32 sm:py-48 bg-white text-center">
-        <Reveal>
-          <p className="text-xs sm:text-sm uppercase tracking-[0.4em] text-moss font-medium mb-6">
-            so please join us...
-          </p>
-          <h2 className="font-display italic text-5xl sm:text-7xl font-bold text-ink mb-16 sm:mb-20">
-            23 Agustus 2026
-          </h2>
-          <Countdown target={WEDDING_DATE} />
-        </Reveal>
-      </section>
+      {/* GALLERY PARALLAX */}
+      <GalleryParallax />
 
-      {/* VENUE HERO WITH PARALLAX */}
-      <VenueHero />
+      {/* COUNTDOWN -> VENUE (curtain-reveal scroll-linked) */}
+      <CountdownVenueSection target={WEDDING_DATE} />
 
       {/* JADWAL ACARA */}
       <section id="acara" className="px-6 py-24 max-w-3xl mx-auto">
@@ -113,83 +104,47 @@ function App() {
             Jadwal Acara
           </h2>
           <div className="grid sm:grid-cols-2 gap-12">
-            {[
-              { j: "08.00", n: "Akad Nikah", l: "Rumah Makan Depa 2" },
-              { j: "10.00", n: "Resepsi", l: "Rumah Makan Depa 2" },
-            ].map((e, i) => (
-              <Reveal key={e.n} delay={i * 120}>
-                <div>
-                  <div className="font-display text-4xl text-ink">{e.j}</div>
-                  <div className="divider my-4" />
-                  <div className="text-sm uppercase tracking-widest font-medium">
-                    {e.n}
-                  </div>
-                  <div className="text-xs text-ink/60 mt-1">{e.l}</div>
+            <Reveal delay={0}>
+              <div>
+                <div className="font-display text-4xl text-ink">08.00</div>
+                <div className="border-b border-ink/10 my-4" />
+                <div className="text-sm uppercase tracking-widest font-medium text-ink">
+                  Akad Nikah
                 </div>
-              </Reveal>
-            ))}
+                <div className="text-xs text-ink/60 mt-2">
+                  Rumah Makan Depa 2
+                </div>
+              </div>
+            </Reveal>
+            <Reveal delay={0}>
+              <div>
+                <div className="font-display text-4xl text-ink">10.00</div>
+                <div className="border-b border-ink/10 my-4" />
+                <div className="text-sm uppercase tracking-widest font-medium text-ink">
+                  Resepsi
+                </div>
+                <div className="text-xs text-ink/60 mt-2">
+                  Rumah Makan Depa 2
+                </div>
+              </div>
+            </Reveal>
           </div>
         </Reveal>
       </section>
 
       {/* RSVP */}
-      <section id="rsvp" className="px-6 py-24 bg-white">
-        <Reveal className="max-w-md mx-auto text-center">
-          <h2 className="font-display italic text-4xl mb-3">
-            Konfirmasi Kehadiran
-          </h2>
-          {/* <p className="text-sm text-ink/60 mb-12">
-            Mohon konfirmasi sebelum 1 Juni 2027
-          </p> */}
-          <form className="space-y-6 text-left">
-            <div>
-              <label className="text-xs uppercase tracking-widest text-ink/60 block mb-3">
-                Nama
-              </label>
-              <div className="text-sm font-bold text-moss bg-moss/10 px-4 py-3 rounded-full">
-                {guest !== "Tamu Undangan" ? guest : "Nama lengkap"}
-              </div>
-            </div>
+      <RSVPForm guest={guest} />
 
-            <div>
-              <label className="text-xs uppercase tracking-widest text-ink/60 block mb-3">
-                Kehadiran
-              </label>
-              <select className="w-full px-4 py-3 bg-transparent border border-ink/20 rounded-lg focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss/30">
-                <option>Hadir</option>
-                <option>Tidak Hadir</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="text-xs uppercase tracking-widest text-ink/60 block mb-3">
-                Jumlah Tamu
-              </label>
-              <input
-                type="number"
-                min={1}
-                defaultValue={1}
-                className="w-full px-4 py-3 bg-transparent border border-ink/20 rounded-lg focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss/30"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full mt-8 bg-ink text-cream text-xs uppercase tracking-widest py-3 rounded-full hover:bg-moss transition-colors font-medium"
-            >
-              Kirim Konfirmasi
-            </button>
-          </form>
-        </Reveal>
-      </section>
+      {/* RSVP LIST */}
+      <RSVPList />
 
       {/* FOOTER */}
-      <footer className="px-6 py-14 text-center">
+      {/* <footer className="px-6 py-14 text-center">
         <span className="font-display italic text-2xl">R &amp; D</span>
         <p className="text-xs text-ink/50 mt-3">
           Dengan penuh sukacita, kami menantikan kehadiran Anda.
         </p>
-      </footer>
+      </footer> */}
     </main>
   );
 }

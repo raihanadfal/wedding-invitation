@@ -52,27 +52,35 @@ function StageCard({
 
   const isEven = index % 2 === 0;
 
-  return (
-    <div className="absolute inset-0 pointer-events-none">
-      {/*
-        PENTING: wrapper centering di bawah ini SENGAJA dipisah dari motion.div.
-        Framer Motion menulis seluruh properti CSS `transform` lewat inline style
-        (untuk y/rotate/scale), dan inline style selalu menang dari class Tailwind
-        seperti `-translate-x-1/2`. Kalau translate-centering & animasi ditaruh di
-        elemen YANG SAMA, class Tailwind-nya akan ketiban dan hilang.
-        Solusinya: wrapper luar (plain div, tanpa style dari Framer) yang urus
-        centering pakai Tailwind transform, motion.div di dalamnya cuma urus animasi.
-      */}
+  // FIX: konten teks diekstrak supaya bisa dipakai di dua wrapper terpisah
+  // (mobile & desktop) tanpa duplikasi motion values secara manual.
+  const textContent = (
+    <motion.div
+      style={{ opacity: textOpacity, y: textY, zIndex: 50 }}
+      className={`flex flex-col max-w-[85vw] w-72 sm:w-80 text-center md:text-left ${
+        isEven ? "md:items-start md:text-left" : "md:items-end md:text-right"
+      }`}
+    >
+      <p className="text-xs uppercase tracking-[0.25em] text-moss mb-2 font-semibold">
+        {stage.title}
+      </p>
+      <p className="text-sm sm:text-base text-ink/80 leading-relaxed font-serif">
+        {stage.text}
+      </p>
+    </motion.div>
+  );
 
-      {/* FOTO — wrapper luar nge-center persis di tengah layar, sama untuk semua stage */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+  return (
+    <div className="absolute inset-0">
+      {/* FOTO — centered in middle */}
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:-translate-y-1/2 pointer-events-none">
         <motion.div
           style={{
             opacity: imageOpacity,
             y: imageY,
             rotate: imageRotate,
             scale: imageScale,
-            zIndex: index + 1, // Foto baru selalu menumpuk DI ATAS foto lama
+            zIndex: index + 1,
           }}
           className="p-3 sm:p-4 bg-white rounded-sm shadow-2xl border border-black/5 pointer-events-auto relative overflow-hidden"
         >
@@ -93,31 +101,20 @@ function StageCard({
         </motion.div>
       </div>
 
-      {/* TEKS — wrapper luar nge-posisi vertikal center + offset kiri/kanan, tidak memengaruhi posisi foto */}
+      {/* TEKS — MOBILE: elemen terpisah, hanya tampil < md */}
+      <div className="md:hidden absolute top-[calc(50%+200px)] left-1/2 -translate-x-1/2 pointer-events-auto">
+        {textContent}
+      </div>
+
+      {/* TEKS — DESKTOP: elemen terpisah, hanya tampil >= md */}
       <div
-        className={`absolute top-1/2 -translate-y-1/2 ${
+        className={`hidden md:block absolute top-1/2 -translate-y-1/2 pointer-events-auto ${
           isEven
-            ? "left-1/2 ml-36 sm:ml-44 md:ml-52"
-            : "right-1/2 mr-36 sm:mr-44 md:mr-52"
+            ? "left-1/2 ml-36 lg:ml-44 xl:ml-52"
+            : "right-1/2 mr-36 lg:mr-44 xl:mr-52"
         }`}
       >
-        <motion.div
-          style={{
-            opacity: textOpacity,
-            y: textY,
-            zIndex: 50, // Teks selalu di layer paling atas
-          }}
-          className={`flex flex-col max-w-[85vw] w-72 sm:w-80 pointer-events-auto ${
-            isEven ? "items-start text-left" : "items-end text-right"
-          }`}
-        >
-          <p className="text-xs uppercase tracking-[0.25em] text-moss mb-2 font-semibold">
-            {stage.title}
-          </p>
-          <p className="text-sm sm:text-base text-ink/80 leading-relaxed font-serif">
-            {stage.text}
-          </p>
-        </motion.div>
+        {textContent}
       </div>
     </div>
   );

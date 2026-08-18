@@ -139,12 +139,15 @@ function App() {
       <RSVPList />
 
       {/* FOOTER */}
-      {/* <footer className="px-6 py-14 text-center">
-        <span className="font-display italic text-2xl">R &amp; D</span>
-        <p className="text-xs text-ink/50 mt-3">
+      <footer className="px-6 py-16 text-center bg-gray-100">
+        <span className="font-display italic text-2xl text-ink">R &amp; D</span>
+        <p className="text-sm text-ink/70 mt-6 max-w-2xl mx-auto leading-relaxed">
+          Merupakan suatu kebahagiaan dan kehormatan bagi kami, apabila Bapak/Ibu/Saudara/i, berkenan hadir dan memberikan Doa
+        </p>
+        <p className="text-xs text-ink/50 mt-6">
           Dengan penuh sukacita, kami menantikan kehadiran Anda.
         </p>
-      </footer> */}
+      </footer>
     </main>
   );
 }

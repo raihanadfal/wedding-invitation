@@ -7,7 +7,7 @@ import {
 } from "framer-motion";
 
 export default function HeroGrid({
-  couple = "T & K",
+  couple = "R & D",
   guest = "Tamu Undangan",
 }: {
   couple?: string;
@@ -89,13 +89,16 @@ export default function HeroGrid({
           }}
           className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center z-40 bg-white"
         >
-          <p className="text-xs uppercase tracking-[0.35em] text-neutral-600 font-medium mb-4">
-            Kepada Yth. {guest}
+          <p className="text-xs sm:text-sm uppercase tracking-[0.35em] text-neutral-600 font-medium mb-3 sm:mb-4">
+            Kepada Yth.
           </p>
-          <p className="font-body text-4xl sm:text-3xl leading-tight text-neutral-900 mb-3 font-light tracking-wide">
+          <p className="text-2xl sm:text-3xl font-semibold text-neutral-900 mb-6 sm:mb-8">
+            {guest}
+          </p>
+          <p className="font-body text-3xl sm:text-6xl leading-tight text-neutral-900 mb-4 sm:mb-6 font-light tracking-wide">
             Anda diundang ke pernikahan
           </p>
-          <p className="font-display italic text-10xl sm:text-5xl text-neutral-900">
+          <p className="font-display italic text-3xl sm:text-5xl text-neutral-900">
             {couple}
           </p>
         </motion.div>

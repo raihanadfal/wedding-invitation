@@ -73,7 +73,7 @@ export default function RSVPList() {
   };
 
   return (
-    <section className="px-6 py-24 bg-gray-50">
+    <section className="px-6 py-24 bg-white">
       <Reveal className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="font-display italic text-4xl mb-4 text-ink">
